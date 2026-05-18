@@ -2,8 +2,10 @@
 
 from __future__ import annotations
 
+import ast
 import json
 import os
+import re
 from typing import Any, Dict, Iterable, List, Optional
 
 from agents.lead_agent.task_planner.types import InvestigationPlan, SubTask
@@ -89,7 +91,29 @@ def _extract_json(text: str) -> Dict[str, Any]:
     end = text.rfind("}")
     if start == -1 or end == -1 or end < start:
         raise ValueError("planner output did not contain JSON")
-    return json.loads(text[start : end + 1])
+    blob = text[start : end + 1]
+    try:
+        return json.loads(blob)
+    except Exception:
+        pass
+
+    # Common LLM artifact: trailing commas before } or ]
+    no_trailing_commas = re.sub(r",\s*([}\]])", r"\1", blob)
+    try:
+        return json.loads(no_trailing_commas)
+    except Exception:
+        pass
+
+    # Fallback: some model outputs are valid Python literals but invalid JSON
+    # (single quotes, True/False/None). Normalize booleans/null then parse.
+    pythonish = no_trailing_commas
+    pythonish = re.sub(r"\btrue\b", "True", pythonish, flags=re.IGNORECASE)
+    pythonish = re.sub(r"\bfalse\b", "False", pythonish, flags=re.IGNORECASE)
+    pythonish = re.sub(r"\bnull\b", "None", pythonish, flags=re.IGNORECASE)
+    parsed = ast.literal_eval(pythonish)
+    if not isinstance(parsed, dict):
+        raise ValueError("planner output JSON root must be an object")
+    return parsed
 
 
 def _normalize_target_agent(

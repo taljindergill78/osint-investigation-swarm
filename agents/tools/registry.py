@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import os
 from pathlib import Path
 from typing import Dict, List, Optional
 
@@ -54,6 +55,26 @@ class _BaseTool:
 
     def __init__(self, data_root: Optional[Path] = None):
         self.data_root = Path(data_root) if data_root else Path("data")
+
+
+def _opencorporates_is_available(*, data_root: Optional[Path], entity: Optional[Entity]) -> bool:
+    """Return True when OpenCorporates can run without guaranteed hard-failure."""
+    if entity is None:
+        return False
+    if str(getattr(entity, "entity_type", "") or "").lower() != "public_company":
+        return False
+    if os.environ.get("OPENCORPORATES_API_TOKEN"):
+        return True
+
+    try:
+        from osint_swarm.data_sources.opencorporates import slug_for_entity_name
+    except Exception:
+        return False
+
+    root = Path(data_root) if data_root else Path("data")
+    slug = slug_for_entity_name(entity.name)
+    cache_path = root / "raw" / "opencorporates" / f"oc_{slug}.json"
+    return cache_path.exists()
 
 
 class SecEdgarTool(_BaseTool):
@@ -146,7 +167,7 @@ def get_tools_for_agent(
 ) -> Dict[str, _BaseTool]:
     """Return the bounded toolset available to a specialist agent."""
     corporate_tools: Dict[str, _BaseTool] = {"sec_edgar": SecEdgarTool(data_root=data_root)}
-    if entity is not None and str(getattr(entity, "entity_type", "") or "").lower() == "public_company":
+    if _opencorporates_is_available(data_root=data_root, entity=entity):
         corporate_tools["opencorporates"] = OpenCorporatesTool(data_root=data_root)
     toolsets: Dict[str, Dict[str, _BaseTool]] = {
         "corporate_agent": corporate_tools,
@@ -168,7 +189,7 @@ def get_available_tools_by_agent(
 ) -> Dict[str, List[str]]:
     """Return a planner-friendly map of available tool names per agent."""
     corporate_tools = ["sec_edgar"]
-    if entity is not None and str(getattr(entity, "entity_type", "") or "").lower() == "public_company":
+    if _opencorporates_is_available(data_root=data_root, entity=entity):
         corporate_tools.append("opencorporates")
     return {
         "corporate_agent": corporate_tools,

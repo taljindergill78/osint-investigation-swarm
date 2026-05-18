@@ -148,3 +148,35 @@ def test_tool_registry_exposes_only_sec_for_corporate(tmp_path):
     corporate_tools = get_tools_for_agent("corporate_agent", data_root=tmp_path, entity=entity)
     assert available["corporate_agent"] == ["sec_edgar"]
     assert list(corporate_tools.keys()) == ["sec_edgar"]
+
+
+def test_tool_registry_includes_opencorporates_with_token(tmp_path, monkeypatch):
+    entity = Entity(
+        entity_id="tesla_inc_cik_0001318605",
+        name="Tesla, Inc.",
+        entity_type="public_company",
+        identifiers={"cik": "0001318605"},
+    )
+    monkeypatch.setenv("OPENCORPORATES_API_TOKEN", "test-token")
+    available = get_available_tools_by_agent(data_root=tmp_path, entity=entity)
+    corporate_tools = get_tools_for_agent("corporate_agent", data_root=tmp_path, entity=entity)
+    assert "opencorporates" in available["corporate_agent"]
+    assert "opencorporates" in corporate_tools
+
+
+def test_tool_registry_includes_opencorporates_with_cache_only(tmp_path, monkeypatch):
+    entity = Entity(
+        entity_id="tesla_inc_cik_0001318605",
+        name="Tesla, Inc.",
+        entity_type="public_company",
+        identifiers={"cik": "0001318605"},
+    )
+    monkeypatch.delenv("OPENCORPORATES_API_TOKEN", raising=False)
+    cache_dir = tmp_path / "raw" / "opencorporates"
+    cache_dir.mkdir(parents=True)
+    (cache_dir / "oc_tesla.json").write_text("{}", encoding="utf-8")
+
+    available = get_available_tools_by_agent(data_root=tmp_path, entity=entity)
+    corporate_tools = get_tools_for_agent("corporate_agent", data_root=tmp_path, entity=entity)
+    assert "opencorporates" in available["corporate_agent"]
+    assert "opencorporates" in corporate_tools

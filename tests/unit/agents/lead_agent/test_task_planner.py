@@ -130,3 +130,51 @@ def test_plan_investigation_normalizes_noncanonical_target_agent_from_tool_signa
     )
     assert plan.tasks[0].target_agent == "legal_agent"
     assert plan.tasks[0].candidate_tools == ("ofac", "courtlistener")
+
+
+def test_plan_investigation_accepts_trailing_commas_in_json():
+    plan = plan_investigation(
+        "Investigate Acme Corp",
+        llm_client=lambda _prompt: """
+        {
+          "investigation_goal": "Investigate Acme Corp",
+          "hypotheses": ["Legal exposure possible",],
+          "tasks": [
+            {
+              "task_type": "litigation",
+              "target_agent": "legal_agent",
+              "description": "Review dockets",
+              "candidate_tools": ["courtlistener",],
+              "priority": "high",
+              "rationale": "Court records can show legal risk",
+            },
+          ],
+          "success_criteria": ["Legal lane completed",],
+          "max_rounds": 1,
+        }
+        """,
+    )
+    assert plan.tasks[0].target_agent == "legal_agent"
+    assert plan.tasks[0].candidate_tools == ("courtlistener",)
+
+
+def test_plan_investigation_accepts_python_literal_style_payload():
+    plan = plan_investigation(
+        "Investigate Acme Corp",
+        llm_client=lambda _prompt: """{
+            'investigation_goal': 'Investigate Acme Corp',
+            'hypotheses': ['Governance risk may exist'],
+            'tasks': [{
+                'task_type': 'corporate_structure',
+                'target_agent': 'corporate_agent',
+                'description': 'Review corporate filings',
+                'candidate_tools': ['sec_edgar'],
+                'priority': 'high',
+                'rationale': 'SEC filings provide governance signal'
+            }],
+            'success_criteria': ['Corporate lane completed'],
+            'max_rounds': 1
+        }""",
+    )
+    assert plan.tasks[0].target_agent == "corporate_agent"
+    assert plan.tasks[0].candidate_tools == ("sec_edgar",)
