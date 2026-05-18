@@ -151,10 +151,11 @@ class GdeltProcessor(DataSourceProcessor):
                 self._raw_dir.mkdir(parents=True, exist_ok=True)
                 write_json(cache_path, payload)
                 raw_location = str(cache_path)
-            except gdelt.GdeltError:
-                # GDELT is rate-limited or unavailable — return empty evidence rather
-                # than killing the whole pipeline. Other data sources still run.
-                return []
+            except gdelt.GdeltError as exc:
+                raise DataSourceError(
+                    "GDELT data unavailable (cache missing and live fetch failed). "
+                    "Retry later or pre-cache GDELT results under data/raw/gdelt/."
+                ) from exc
 
         articles = gdelt.extract_article_records(payload)
         # Keep only English-language articles (filters cached non-English entries too)

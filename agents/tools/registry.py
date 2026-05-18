@@ -106,6 +106,25 @@ class CourtListenerTool(_BaseTool):
         )
 
 
+class OpenCorporatesTool(_BaseTool):
+    name = "opencorporates"
+    description = "Map beneficial ownership and control relationships."
+
+    def run(self, entity: Entity, task: SubTask, context: InvestigationContext) -> ToolCallResult:
+        from agents.specialist_agents.corporate_agent.structure_mapper.mapper import map_structure
+
+        evidence = map_structure(entity, task, context, data_root=self.data_root)
+        discovered = _extract_discovered_entities(evidence, source=self.name)
+        observation = f"Retrieved {len(evidence)} OpenCorporates evidence rows."
+        return ToolCallResult(
+            tool_name=self.name,
+            evidence=evidence,
+            observation=observation,
+            discovered_entities=discovered,
+            success=True,
+        )
+
+
 class GdeltTool(_BaseTool):
     name = "gdelt"
     description = "Fetch adverse media and public reporting from GDELT."
@@ -127,6 +146,8 @@ def get_tools_for_agent(
 ) -> Dict[str, _BaseTool]:
     """Return the bounded toolset available to a specialist agent."""
     corporate_tools: Dict[str, _BaseTool] = {"sec_edgar": SecEdgarTool(data_root=data_root)}
+    if entity is not None and str(getattr(entity, "entity_type", "") or "").lower() == "public_company":
+        corporate_tools["opencorporates"] = OpenCorporatesTool(data_root=data_root)
     toolsets: Dict[str, Dict[str, _BaseTool]] = {
         "corporate_agent": corporate_tools,
         "legal_agent": {
@@ -146,8 +167,11 @@ def get_available_tools_by_agent(
     entity: Optional[Entity] = None,
 ) -> Dict[str, List[str]]:
     """Return a planner-friendly map of available tool names per agent."""
+    corporate_tools = ["sec_edgar"]
+    if entity is not None and str(getattr(entity, "entity_type", "") or "").lower() == "public_company":
+        corporate_tools.append("opencorporates")
     return {
-        "corporate_agent": ["sec_edgar"],
+        "corporate_agent": corporate_tools,
         "legal_agent": ["ofac", "courtlistener"],
         "social_graph_agent": ["gdelt"],
     }

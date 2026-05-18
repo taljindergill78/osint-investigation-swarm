@@ -7,13 +7,20 @@ __pycache__/
 
 # Environment variables (never commit real credentials)
 .env
+.env.local
+.env.*.local
 
 # Data (processed kept out; raw committed for Render deployment)
 data/processed/
+docs/
 
 # Course submission extras (do not commit)
 extras/
 
 # Personal sprint tracking (Jacob — not for repo)
 FINAL_SPRINT.md
+
+# Railway / deploy local state
+.railway/
+*.log
 

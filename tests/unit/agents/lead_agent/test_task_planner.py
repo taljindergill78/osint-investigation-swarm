@@ -104,3 +104,29 @@ def test_plan_investigation_filters_candidate_tools_to_available_set():
         """,
     )
     assert plan.tasks[0].candidate_tools == ("sec_edgar",)
+
+
+def test_plan_investigation_normalizes_noncanonical_target_agent_from_tool_signal():
+    plan = plan_investigation(
+        "Investigate The Boeing Company for money laundering",
+        llm_client=lambda _prompt: """
+        {
+          "investigation_goal": "Investigate The Boeing Company",
+          "hypotheses": ["Potential legal exposure may exist"],
+          "tasks": [
+            {
+              "task_type": "litigation_and_sanctions_screen",
+              "target_agent": "The Boeing Company",
+              "description": "Screen sanctions and dockets",
+              "candidate_tools": ["ofac", "courtlistener"],
+              "priority": "high",
+              "rationale": "Legal lane should cover sanctions and litigation"
+            }
+          ],
+          "success_criteria": ["Legal lane completed"],
+          "max_rounds": 1
+        }
+        """,
+    )
+    assert plan.tasks[0].target_agent == "legal_agent"
+    assert plan.tasks[0].candidate_tools == ("ofac", "courtlistener")

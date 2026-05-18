@@ -1,0 +1,99 @@
+{
+  "search": {
+    "entity_name": "Tesla, Inc.",
+    "total_count": 156,
+    "companies": [
+      {
+        "name": "TESLA, INC.",
+        "company_number": "C3259768",
+        "jurisdiction_code": "us_ca",
+        "company_type": "Stock Corporation - CA - General",
+        "current_status": "Active",
+        "incorporation_date": "2003-07-01",
+        "dissolution_date": null,
+        "inactive": false,
+        "opencorporates_url": "https://opencorporates.com/companies/us_ca/C3259768",
+        "registered_address_in_full": "1 TESLA ROAD, AUSTIN, TX 78725"
+      }
+    ]
+  },
+  "detail": {
+    "name": "TESLA, INC.",
+    "company_number": "C3259768",
+    "jurisdiction_code": "us_ca",
+    "company_type": "Stock Corporation - CA - General",
+    "current_status": "Active",
+    "incorporation_date": "2003-07-01",
+    "dissolution_date": null,
+    "inactive": false,
+    "opencorporates_url": "https://opencorporates.com/companies/us_ca/C3259768",
+    "registered_address_in_full": "1 TESLA ROAD, AUSTIN, TX 78725",
+    "officers": [
+      {
+        "id": 301001,
+        "name": "ELON R MUSK",
+        "position": "chief executive officer",
+        "start_date": "2008-10-01",
+        "end_date": null,
+        "opencorporates_url": "https://opencorporates.com/officers/301001"
+      },
+      {
+        "id": 301002,
+        "name": "VAIBHAV TANEJA",
+        "position": "chief financial officer",
+        "start_date": "2023-08-01",
+        "end_date": null,
+        "opencorporates_url": "https://opencorporates.com/officers/301002"
+      },
+      {
+        "id": 301003,
+        "name": "ROBYN M DENHOLM",
+        "position": "director",
+        "start_date": "2014-08-01",
+        "end_date": null,
+        "opencorporates_url": "https://opencorporates.com/officers/301003"
+      },
+      {
+        "id": 301004,
+        "name": "JAMES MURDOCH",
+        "position": "director",
+        "start_date": "2017-03-01",
+        "end_date": null,
+        "opencorporates_url": "https://opencorporates.com/officers/301004"
+      },
+      {
+        "id": 301005,
+        "name": "ZACHARY J KIRKHORN",
+        "position": "chief financial officer",
+        "start_date": "2019-03-01",
+        "end_date": "2023-08-01",
+        "opencorporates_url": "https://opencorporates.com/officers/301005"
+      },
+      {
+        "id": 301006,
+        "name": "KATHLEEN WILSON-THOMPSON",
+        "position": "director",
+        "start_date": "2018-12-01",
+        "end_date": null,
+        "opencorporates_url": "https://opencorporates.com/officers/301006"
+      }
+    ],
+    "corporate_groupings": [
+      {
+        "name": "tesla",
+        "opencorporates_url": "https://opencorporates.com/corporate_groupings/tesla",
+        "wikipedia_id": "Tesla,_Inc."
+      }
+    ],
+    "previous_names": [
+      {
+        "company_name": "TESLA MOTORS, INC.",
+        "con_date": "2017-02-01"
+      }
+    ],
+    "controlling_entity": null,
+    "ultimate_beneficial_owners": [],
+    "ultimate_controlling_company": null,
+    "industry_codes": []
+  }
+}

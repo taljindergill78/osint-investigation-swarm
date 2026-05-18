@@ -1,0 +1,81 @@
+{
+  "search": {
+    "entity_name": "Ford Motor Company",
+    "total_count": 89,
+    "companies": [
+      {
+        "name": "FORD MOTOR COMPANY",
+        "company_number": "128900",
+        "jurisdiction_code": "us_de",
+        "company_type": "Corporation",
+        "current_status": "Active",
+        "incorporation_date": "1919-07-09",
+        "dissolution_date": null,
+        "inactive": false,
+        "opencorporates_url": "https://opencorporates.com/companies/us_de/128900",
+        "registered_address_in_full": "1 AMERICAN ROAD, DEARBORN, MI 48126"
+      }
+    ]
+  },
+  "detail": {
+    "name": "FORD MOTOR COMPANY",
+    "company_number": "128900",
+    "jurisdiction_code": "us_de",
+    "company_type": "Corporation",
+    "current_status": "Active",
+    "incorporation_date": "1919-07-09",
+    "dissolution_date": null,
+    "inactive": false,
+    "opencorporates_url": "https://opencorporates.com/companies/us_de/128900",
+    "registered_address_in_full": "1 AMERICAN ROAD, DEARBORN, MI 48126",
+    "officers": [
+      {
+        "id": 302001,
+        "name": "WILLIAM CLAY FORD JR",
+        "position": "executive chairman",
+        "start_date": "2001-01-01",
+        "end_date": null,
+        "opencorporates_url": "https://opencorporates.com/officers/302001"
+      },
+      {
+        "id": 302002,
+        "name": "JAMES D FARLEY JR",
+        "position": "president and chief executive officer",
+        "start_date": "2020-10-01",
+        "end_date": null,
+        "opencorporates_url": "https://opencorporates.com/officers/302002"
+      },
+      {
+        "id": 302003,
+        "name": "JOHN T LAWLER",
+        "position": "chief financial officer",
+        "start_date": "2022-09-01",
+        "end_date": null,
+        "opencorporates_url": "https://opencorporates.com/officers/302003"
+      },
+      {
+        "id": 302004,
+        "name": "ALEXANDRA FORD ENGLISH",
+        "position": "director",
+        "start_date": "2021-03-01",
+        "end_date": null,
+        "opencorporates_url": "https://opencorporates.com/officers/302004"
+      }
+    ],
+    "corporate_groupings": [
+      {
+        "name": "ford_motor",
+        "opencorporates_url": "https://opencorporates.com/corporate_groupings/ford_motor",
+        "wikipedia_id": "Ford_Motor_Company"
+      }
+    ],
+    "previous_names": [],
+    "controlling_entity": {
+      "name": "Ford family trust",
+      "opencorporates_url": ""
+    },
+    "ultimate_beneficial_owners": [],
+    "ultimate_controlling_company": null,
+    "industry_codes": []
+  }
+}

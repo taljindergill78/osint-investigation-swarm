@@ -1,0 +1,86 @@
+{
+  "search": {
+    "entity_name": "The Boeing Company",
+    "total_count": 74,
+    "companies": [
+      {
+        "name": "THE BOEING COMPANY",
+        "company_number": "0276930",
+        "jurisdiction_code": "us_de",
+        "company_type": "Corporation",
+        "current_status": "Active",
+        "incorporation_date": "1934-07-19",
+        "dissolution_date": null,
+        "inactive": false,
+        "opencorporates_url": "https://opencorporates.com/companies/us_de/0276930",
+        "registered_address_in_full": "929 LONG BRIDGE DRIVE, ARLINGTON, VA 22202"
+      }
+    ]
+  },
+  "detail": {
+    "name": "THE BOEING COMPANY",
+    "company_number": "0276930",
+    "jurisdiction_code": "us_de",
+    "company_type": "Corporation",
+    "current_status": "Active",
+    "incorporation_date": "1934-07-19",
+    "dissolution_date": null,
+    "inactive": false,
+    "opencorporates_url": "https://opencorporates.com/companies/us_de/0276930",
+    "registered_address_in_full": "929 LONG BRIDGE DRIVE, ARLINGTON, VA 22202",
+    "officers": [
+      {
+        "id": 303001,
+        "name": "KELLY ORTBERG",
+        "position": "president and chief executive officer",
+        "start_date": "2024-08-01",
+        "end_date": null,
+        "opencorporates_url": "https://opencorporates.com/officers/303001"
+      },
+      {
+        "id": 303002,
+        "name": "BRIAN J WEST",
+        "position": "executive vice president and chief financial officer",
+        "start_date": "2021-08-01",
+        "end_date": null,
+        "opencorporates_url": "https://opencorporates.com/officers/303002"
+      },
+      {
+        "id": 303003,
+        "name": "STEVEN M MOLLENKOPF",
+        "position": "chairman of the board",
+        "start_date": "2024-03-01",
+        "end_date": null,
+        "opencorporates_url": "https://opencorporates.com/officers/303003"
+      },
+      {
+        "id": 303004,
+        "name": "DAVID L CALHOUN",
+        "position": "president and chief executive officer",
+        "start_date": "2020-01-13",
+        "end_date": "2024-08-01",
+        "opencorporates_url": "https://opencorporates.com/officers/303004"
+      },
+      {
+        "id": 303005,
+        "name": "GREG SMITH",
+        "position": "chief financial officer",
+        "start_date": "2011-10-01",
+        "end_date": "2021-07-01",
+        "opencorporates_url": "https://opencorporates.com/officers/303005"
+      }
+    ],
+    "corporate_groupings": [
+      {
+        "name": "boeing",
+        "opencorporates_url": "https://opencorporates.com/corporate_groupings/boeing",
+        "wikipedia_id": "Boeing"
+      }
+    ],
+    "previous_names": [],
+    "controlling_entity": null,
+    "ultimate_beneficial_owners": [],
+    "ultimate_controlling_company": null,
+    "industry_codes": []
+  }
+}

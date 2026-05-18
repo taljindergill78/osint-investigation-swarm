@@ -92,22 +92,83 @@ def _extract_json(text: str) -> Dict[str, Any]:
     return json.loads(text[start : end + 1])
 
 
-def _coerce_task(raw: Dict[str, Any], *, allowed_tools: Iterable[str]) -> SubTask:
+def _normalize_target_agent(
+    raw_target_agent: str,
+    *,
+    task_type: str,
+    description: str,
+    candidate_tools: Any,
+    available_tools_by_agent: Dict[str, Iterable[str]],
+) -> str:
+    normalized = (raw_target_agent or "").strip().lower().replace("-", "_").replace(" ", "_")
+    valid_agents = {"corporate_agent", "legal_agent", "social_graph_agent"}
+    if normalized in valid_agents:
+        return normalized
+
+    alias_map = {
+        "corporate": "corporate_agent",
+        "corp": "corporate_agent",
+        "company": "corporate_agent",
+        "corporate_lane": "corporate_agent",
+        "legal": "legal_agent",
+        "compliance": "legal_agent",
+        "regulatory": "legal_agent",
+        "legal_lane": "legal_agent",
+        "social": "social_graph_agent",
+        "social_graph": "social_graph_agent",
+        "media": "social_graph_agent",
+        "network": "social_graph_agent",
+        "social_graph_lane": "social_graph_agent",
+    }
+    if normalized in alias_map:
+        return alias_map[normalized]
+
+    tool_to_agent: Dict[str, str] = {}
+    for agent_name, tools in available_tools_by_agent.items():
+        for tool in tools:
+            tool_to_agent[str(tool).strip().lower()] = agent_name
+    if isinstance(candidate_tools, list):
+        for tool in candidate_tools:
+            inferred = tool_to_agent.get(str(tool).strip().lower())
+            if inferred:
+                return inferred
+
+    task_context = f"{task_type} {description}".lower()
+    if any(word in task_context for word in ("sec", "filing", "ownership", "governance", "board")):
+        return "corporate_agent"
+    if any(word in task_context for word in ("sanction", "legal", "court", "docket", "compliance", "enforcement")):
+        return "legal_agent"
+    if any(word in task_context for word in ("news", "media", "network", "graph", "reputation", "adverse")):
+        return "social_graph_agent"
+
+    raise PlannerLLMError(f"planner returned unsupported target_agent: {raw_target_agent}")
+
+
+def _coerce_task(
+    raw: Dict[str, Any],
+    *,
+    available_tools_by_agent: Dict[str, Iterable[str]],
+) -> SubTask:
     task_type = str(raw.get("task_type") or "").strip()
-    target_agent = str(raw.get("target_agent") or "").strip()
+    target_agent_raw = str(raw.get("target_agent") or "").strip()
     description = str(raw.get("description") or "").strip()
     priority = str(raw.get("priority") or "").strip().lower()
     rationale = str(raw.get("rationale") or "").strip()
     candidate_tools = raw.get("candidate_tools")
-    if not task_type or not target_agent or not description:
+    if not task_type or not target_agent_raw or not description:
         raise PlannerLLMError("planner output is missing required task fields")
-    if target_agent not in {"corporate_agent", "legal_agent", "social_graph_agent"}:
-        raise PlannerLLMError(f"planner returned unsupported target_agent: {target_agent}")
+    target_agent = _normalize_target_agent(
+        target_agent_raw,
+        task_type=task_type,
+        description=description,
+        candidate_tools=candidate_tools,
+        available_tools_by_agent=available_tools_by_agent,
+    )
     if priority not in {"high", "medium", "low"}:
         raise PlannerLLMError(f"planner returned invalid task priority: {priority}")
     if not isinstance(candidate_tools, list) or not candidate_tools:
         raise PlannerLLMError("planner task must include a non-empty candidate_tools array")
-    allowed = set(str(name) for name in allowed_tools)
+    allowed = set(str(name) for name in available_tools_by_agent.get(target_agent, ()))
     normalized_tools = tuple(str(t).strip() for t in candidate_tools if str(t).strip())
     normalized_tools = tuple(name for name in normalized_tools if name in allowed)
     if not normalized_tools:
@@ -135,9 +196,12 @@ def _validate_plan(
     for item in (raw_plan.get("tasks") or []):
         if not isinstance(item, dict):
             continue
-        target_agent = str(item.get("target_agent") or "").strip()
-        allowed_tools = available_tools_by_agent.get(target_agent, ())
-        tasks.append(_coerce_task(item, allowed_tools=allowed_tools))
+        tasks.append(
+            _coerce_task(
+                item,
+                available_tools_by_agent=available_tools_by_agent,
+            )
+        )
     if not tasks:
         raise PlannerLLMError("planner returned no tasks")
 

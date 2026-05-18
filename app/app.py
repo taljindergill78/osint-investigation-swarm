@@ -34,6 +34,11 @@ def index():
     return render_template("index.html", entities=entities, templates=templates)
 
 
+@app.route("/healthz", methods=["GET"])
+def healthz():
+    return {"status": "ok"}, 200
+
+
 @app.route("/", methods=["POST"])
 def submit():
     entities = get_registered_entities()

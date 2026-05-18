@@ -162,6 +162,11 @@ def _names_match(qterm: str, sdn_norm: str) -> bool:
     return False
 
 
+def _terms_match(qterm: str, sdn_norm: str) -> bool:
+    """Backward-compatible alias retained for existing tests/callers."""
+    return _names_match(qterm, sdn_norm)
+
+
 def search_entries(
     entries: List[Dict[str, Any]],
     entity_name: str,
